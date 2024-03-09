@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lightning board</title>
+    <style>
+        body{
+            background-color: black;
+        }
+        .sparkleboard,.lineboard{
+            background-color: rgb(12, 10, 10);
+            border: 10px solid;
+            width: 90%;
+            height: 630px;
+            margin-top: 0%;
+            position: relative;
+            /* border-image:(to left, red, orange, yellow, green, blue); */
+            /* border-image:linear-gradient */
+            border-image: linear-gradient(to top, red 30%, rgb(9, 47, 197) 70%) 5/1;
+            animation: bordercolor 20s infinite linear;
+            animation-fill-mode: backwards;
+
+        }
+        
+        .clas0,.clas1,.clas2,.clas3{
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .clas0 {
+           
+            background-color: #1395ec; 
+            animation: bubble 5s linear; 
+            animation-fill-mode: forwards;
+        }
+        .clas1 {
+            background-color: #ec137c; 
+            animation: bubble 5s linear; 
+            animation-fill-mode: forwards;
+        }
+        .clas2 {
+            background-color: #13ec1a; 
+            animation: bubble 5s linear; 
+            animation-fill-mode: forwards;
+        }
+        .clas3 {
+            background-color: #eee307; 
+            animation: bubble 5s linear; 
+            animation-fill-mode: forwards;
+        }
+        .lines1{
+            width: 5px;
+            height: 5px;
+            position: absolute;
+            background-color: rgb(203, 224, 16);
+        }
+        .colorbox,.undo1,.clrall{
+            height: 20px;
+            width: 50px;
+            margin-top: 0%;
+            background-color: #eff3ef;
+        }
+        .colorbox{
+            margin-left: 20%; 
+        }
+        .undo1{
+            margin-left: 5px; 
+        }
+        .clrall{
+            margin-left: 5px;
+        }
+
+        @keyframes bordercolor{
+            to{
+                border-image: linear-gradient(to top, rgb(9, 47, 197) 30%, red 70%) 5;
+            }
+        }
+        
+        @keyframes bubble {
+            to {
+                width: 0px;
+                height: 0px;
+            }
+        }
+    </style>
+</head>
+<body onload="sparkle()">
+    
+    <button onclick="sparkle()" id="btn1">sparkle</button>
+    <button onclick="line()" id="btn2">line</button>
+    <!-- <p id="msg"></p> -->
+    <script>
+         
+
+    
+        function sparkle() {
+            var existing=document.body;
+            // var existing=document.getElementById("body1");
+
+            // document.getElementById("msg").innerHTML=existing.children+existing.children.length;
+            if (existing) {
+                for(let i=existing.children.length-1;i>2;i--){
+                existing.removeChild(existing.children[i]);
+                }  
+            }
+            document.getElementById('btn2').style.backgroundColor='white';
+            document.getElementById('btn1').style.backgroundColor='#1395ec';
+
+            var board=document.createElement('div');
+            board.classList.add('sparkleboard');
+
+
+            // ------------------------------------------------------------------------
+        //     board.addEventListener('mousemove',function(event){
+        //     for(let i=0; i<4;i++){
+
+        //         clas="clas"+String(i);
+        //         var bubble=document.createElement('div');
+        //         bubble.classList.add(clas);
+        //         if (i==0){
+        //             bubble.style.left=event.clientX+4*i+"px";
+        //             bubble.style.top=event.clientY+4*i+"px";
+        //         }
+        //         else if(i==1){
+        //             bubble.style.left=event.clientX+20+"px";
+        //             bubble.style.top=event.clientY-6*i+"px";
+        //         }
+        //         else{
+        //             bubble.style.left=event.clientX+5*i+"px";
+        //             bubble.style.top=event.clientY+6*i+"px";
+        //         }
+        //         board.appendChild(bubble);
+        //     }
+        // });
+        //     document.body.appendChild(board);
+        // }
+        
+// ================================================================================
+
+board.addEventListener('mousemove', handleMove);
+            board.addEventListener('touchmove', handleMove);
+
+            function handleMove(event) {
+                for (let i = 0; i < 4; i++) {
+                    clas = "clas" + String(i);
+                    var bubble = document.createElement('div');
+                    bubble.classList.add(clas);
+
+                    var clientX, clientY;
+
+                    // Check if it's a touch event
+                    if (event.type === 'touchmove') {
+                        clientX = event.touches[0].clientX;
+                        clientY = event.touches[0].clientY;
+                    } else {
+                        clientX = event.clientX;
+                        clientY = event.clientY;
+                    }
+
+                    if (i == 0) {
+                        bubble.style.left = clientX + 4 * i + "px";
+                        bubble.style.top = clientY + 4 * i + "px";
+                    } else if (i == 1) {
+                        bubble.style.left = clientX + 20 + "px";
+                        bubble.style.top = clientY - 6 * i + "px";
+                    } else {
+                        bubble.style.left = clientX + 5 * i + "px";
+                        bubble.style.top = clientY + 6 * i + "px";
+                    }
+                    board.appendChild(bubble);
+                }
+            }
+
+            document.body.appendChild(board);
+        }
+
+        // ==================================================================
+        // line board
+        function line(){
+            var existing=document.body;
+            if (existing) {
+                for(let i=existing.children.length-1;i>2;i--){
+                existing.removeChild(existing.children[i]);
+                }
+            }
+            var board=document.createElement('div');
+            board.classList.add('lineboard');
+
+            
+
+            
+            var isDrawing = false;
+            document.getElementById('btn1').style.backgroundColor='white';
+            document.getElementById('btn2').style.backgroundColor='#1395ec';
+
+    //         board.addEventListener('mousedown', function (event) {
+                
+
+    //             isDrawing = true;
+    //             var lines = document.createElement('div');
+    //             lines.classList.add('lines1');
+    //             lines.style.left = event.clientX-16 + 'px';
+    //             lines.style.top = event.clientY-40+ 'px';
+    //             board.appendChild(lines);
+
+    //             board.addEventListener('mousemove', function (event) {
+    //                 if (isDrawing) {
+    //                     lines = document.createElement('div');
+    //                     lines.classList.add('lines1');
+    //                     lines.style.left = event.clientX -16+ 'px';
+    //                     lines.style.top = event.clientY-40+ 'px';
+    //                     board.appendChild(lines);
+    //                 }
+    //     });
+
+    //     board.addEventListener('mouseup', function () {
+    //         isDrawing = false;
+    //     });
+    // });
+    board.addEventListener('mousedown', handleStart);
+board.addEventListener('touchstart', handleStart);
+
+function handleStart(event) {
+    isDrawing = true;
+    var lines = document.createElement('div');
+    lines.classList.add('lines1');
+
+    var clientX, clientY;
+
+    // Check if it's a touch event
+    if (event.type === 'touchstart') {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+    }
+
+    lines.style.left = clientX - 16 + 'px';
+    lines.style.top = clientY - 40 + 'px';
+    board.appendChild(lines);
+
+    board.addEventListener('mousemove', handleMove);
+    board.addEventListener('touchmove', handleMove);
+
+    function handleMove(event) {
+        if (isDrawing) {
+            lines = document.createElement('div');
+            lines.classList.add('lines1');
+
+            // Check if it's a touch event
+            if (event.type === 'touchmove') {
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+            } else {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            }
+
+            lines.style.left = clientX - 16 + 'px';
+            lines.style.top = clientY - 40 + 'px';
+            board.appendChild(lines);
+        }
+    }
+
+    board.addEventListener('mouseup', function () {
+        isDrawing = false;
+        board.removeEventListener('mousemove', handleMove);
+        board.removeEventListener('touchmove', handleMove);
+    });
+}
+
+
+    // choose color
+    var colorbox=document.createElement('input');
+    colorbox.classList.add('colorbox');
+    document.body.appendChild(colorbox);
+    colorbox.type="color";
+    colorbox.addEventListener('input',function(){
+        var linesElements = document.getElementsByClassName('lines1');
+        var lenght=linesElements.length;
+        var linesElements = document.getElementsByClassName('lines1');
+
+// Loop through each element with the class 'lines1' and set the background color
+        for (var i = 0; i < linesElements.length; i++) {
+            linesElements[i].style.backgroundColor = colorbox.value;
+        }
+    });
+
+    // undo button
+    var undo =document.createElement('Button');
+    undo.classList.add('undo1');
+    document.body.appendChild(undo);
+    undo.innerText="Undo";
+    undo.addEventListener('click',function(){
+        var existing=document.getElementsByClassName('lines1');
+        if (existing.length > 0) {
+            for(let i=0;i<20;i++){
+                var lastIndex = existing.length - 1;
+                existing[lastIndex].parentNode.removeChild(existing[lastIndex]);
+            } 
+        }
+    });
+        
+    // clear all button
+    var clrall =document.createElement('Button');
+    clrall.classList.add('clrall');
+    document.body.appendChild(clrall);
+    clrall.innerText="Clear all";
+    clrall.addEventListener('click',function(){
+        var existing=document.getElementsByClassName('lines1');
+        if (existing.length > 0) {
+            for(let i=existing.length-1;i>=0;i--){
+                var lastIndex = existing.length - 1;
+                existing[i].parentNode.removeChild(existing[i]);
+            } 
+        }
+    });
+            
+    document.body.appendChild(board);
+    }
+    </script>
+</body>
+</html>
+ 
